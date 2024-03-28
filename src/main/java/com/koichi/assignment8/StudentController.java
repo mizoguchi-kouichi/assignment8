@@ -1,5 +1,6 @@
 package com.koichi.assignment8;
 
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,27 +10,20 @@ import java.util.List;
 
 @RestController
 public class StudentController {
-    private final StudentMapper studentMapper;
+    private final StudentService studentService;
 
-    public StudentController(StudentMapper studentMapper) {
-        this.studentMapper = studentMapper;
-    }
-
-    @GetMapping("/students")
-    public List<Student> findAllStudents(@RequestParam(required = false) Integer grade, String startsWith, String birthPlace) {
-        if (grade != null) {
-            return studentMapper.findByGrade(grade);
-        } else if (startsWith != null) {
-            return studentMapper.findByName(startsWith);
-        } else if (birthPlace != null) {
-            return studentMapper.findByBirthPlace(birthPlace);
-        } else {
-            return studentMapper.findAllStudents();
-        }
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
     }
 
     @GetMapping("/students/{id}")
-    public List<Student> findById(@PathVariable("id") Integer id) {
-        return studentMapper.findById(id);
+    public Student findById(@PathVariable("id") Integer id) {
+        return studentService.findStudent(id);
     }
+
+    @GetMapping("/students")
+    public List<Student> getAllStudents(@RequestParam(required = false) Integer grade, String startsWith, String birthPlace) {
+        return studentService.findAllStudents(grade, startsWith, birthPlace);
+    }
+
 }
