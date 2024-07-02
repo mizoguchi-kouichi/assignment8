@@ -1,0 +1,21 @@
+students:
+  - id: 2
+    name: "田中圭"
+    grade: "一年生"
+    birth_place: "福岡県"
+  - id: 3
+    name: "岡崎徹"
+    grade: "二年生"
+    birth_place: "大分県"
+  - id: 4
+    name: "溝口光一"
+    grade: "二年生"
+    birth_place: "熊本県"
+  - id: 5
+    name: "溝谷望"
+    grade: "三年生"
+    birth_place: "熊本県"
+  - id: 6
+    name: "安藤孝弘"
+    grade: "三年生"
+    birth_place: "福岡県"

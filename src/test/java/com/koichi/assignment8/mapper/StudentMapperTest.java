@@ -124,4 +124,13 @@ class StudentMapperTest {
         studentMapper.updateGrade("三年生", "二年生");
         studentMapper.updateGrade("二年生", "一年生");
     }
+
+    @Test
+    @DataSet(value = "datasets/students.yml")
+    @ExpectedDataSet(value = "datasets/studentsToRemoved.yml")
+    @Transactional
+    public void IDに該当する学生のデータを削除出来ること() {
+
+        studentMapper.deleteStudent(1);
+    }
 }
