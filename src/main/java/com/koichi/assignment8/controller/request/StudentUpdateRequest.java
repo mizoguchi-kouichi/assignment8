@@ -1,24 +1,35 @@
 package com.koichi.assignment8.controller.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotBlank;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Optional;
 
 /**
  * 指定したidのstudentの name,grade,birthplaceを更新するREAD処理
  * で使用するRequestです。
  */
+@Schema(description = "生徒情報更新リクエスト")
 public class StudentUpdateRequest {
 
+    @Schema(description = "生徒の名前", example = "山田太郎", required = true)
     @NotBlank(message = "nameを入力してください")
     private String name;
+
+    @Schema(description = "生徒の学年", example = "一年生", required = true)
     @ValidGrade
     private String grade;
+
+    @Schema(description = "生徒の出身地", example = "東京都", required = true)
     @NotBlank(message = "birthPlaceを入力してください")
     private String birthPlace;
 

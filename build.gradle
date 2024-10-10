@@ -28,6 +28,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.25.1")
     implementation group: 'com.github.database-rider', name: 'rider-spring', version: '1.42.0'
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '5.2.0'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.6.0'
 }
 
 tasks.named('test') {

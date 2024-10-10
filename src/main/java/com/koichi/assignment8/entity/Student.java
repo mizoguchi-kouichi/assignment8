@@ -1,20 +1,26 @@
 package com.koichi.assignment8.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.Objects;
 
+@Schema(description = "学生情報")
 public class Student {
-
+    @Schema(description = "学生ID")
     private Integer id;
 
+    @Schema(description = "学生の名前")
     @NotBlank(message = "nameを入力してください")
     private String name;
 
+    @Schema(description = "学年")
     private String grade;
 
+    @Schema(description = "出身地")
     @NotBlank(message = "birthPlaceを入力してください")
     private String birthPlace;
+
 
     public Student(Integer id, String name, String grade, String birthPlace) {
         this.id = id;
@@ -70,6 +76,4 @@ public class Student {
     public int hashCode() {
         return Objects.hash(id, name, grade, birthPlace);
     }
-
-
 }
