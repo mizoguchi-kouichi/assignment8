@@ -1,0 +1,26 @@
+name: Deploy Swagger UI to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install swagger-cli
+        run: npm install -g swagger-cli
+
+      - name: Generate Swagger UI
+        run: swagger-cli bundle -o /docs/openapi.yml /docs/openapi.yml
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.ACCESSTOKEN}}
+          publish_dir: ./docs

@@ -1,0 +1,370 @@
+openapi: 3.0.1
+info:
+  title: 学生リスト管理API
+  description: 中学校および高校の学生データを管理する機能を提供しています。
+  version: "1.0"
+servers:
+  - url: http://localhost:8080/
+    description: ローカル開発環境
+paths:
+  /students:
+    get:
+      tags:
+        - student-controller
+      summary: 詳細検索API
+      description: このエンドポイントでは全学生の情報を取得できます。また、特定のカラムを指定して学生を検索することも可能です。ただし、検索に使用できるカラムは一度に1つのみです。
+      operationId: getStudents
+      parameters:
+        - name: grade
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: startsWith
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: birthPlace
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - student-controller
+      summary: 学生追加API
+      description: 名前、学年、出身地を入力してリクエストすると、新しい学生を追加できます。
+      operationId: insertStudent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentPostRequest'
+        required: true
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+                  - $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                ErrorResponse:
+                  description: ErrorResponse
+                  value:
+                    timestamp: string
+                    status: string
+                    error: string
+                    message: string
+                    path: string
+                ValidationErrorResponse:
+                  description: ValidationErrorResponse
+                  value:
+                    status: string
+                    message: string
+                    timestamp: string
+                    errors:
+                      - field: string
+                        message: string
+  /students/{id}:
+    get:
+      tags:
+        - student-controller
+      summary: 学生取得API
+      description: 指定したidのstudentのデータを全て取得します
+      operationId: findById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: student not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - student-controller
+      summary: 学生削除API
+      description: 指定したidの学生を削除出来ます。
+      operationId: deleteStudent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: student not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      tags:
+        - student-controller
+      summary: 学生更新API
+      description: 指定したidの生徒の情報を更新できます。
+      operationId: updateStudent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentUpdateRequest'
+        required: true
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: student not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+                  - $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                ErrorResponse:
+                  description: ErrorResponse
+                  value:
+                    timestamp: string
+                    status: string
+                    error: string
+                    message: string
+                    path: string
+                ValidationErrorResponse:
+                  description: ValidationErrorResponse
+                  value:
+                    status: string
+                    message: string
+                    timestamp: string
+                    errors:
+                      - field: string
+                        message: string
+  /students/grade/_batchUpdate:
+    patch:
+      tags:
+        - student-controller
+      summary: 全学年更新API
+      description: 全生徒の学年を更新できます。
+      operationId: updateGrade
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    StudentPostRequest:
+      required:
+        - birthPlace
+        - grade
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: 学生の名前
+          example: 山田太郎
+        grade:
+          type: string
+          description: 学年
+          example: 一年生
+        birthPlace:
+          type: string
+          description: 出身地
+          example: 東京
+      description: 学生登録リクエスト
+    StudentResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: レスポンスメッセージ
+      description: 成功した際のレスポンスメッセージ
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: エラー発生時刻
+        status:
+          type: string
+          description: HTTPステータス
+        error:
+          type: string
+          description: エラータイプ
+        message:
+          type: string
+          description: エラーメッセージ
+        path:
+          type: string
+          description: エラーが発生したパス
+      description: エラーレスポンス
+    ValidationErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: HTTPステータス
+        message:
+          type: string
+          description: エラーメッセージ
+        timestamp:
+          type: string
+          description: エラー発生時刻
+        errors:
+          type: array
+          description: バリデーションエラーの詳細リスト
+          items:
+            type: object
+            additionalProperties:
+              type: string
+              description: バリデーションエラーの詳細リスト
+            description: バリデーションエラーの詳細リスト
+      description: バリデーションエラーレスポンス
+    StudentUpdateRequest:
+      required:
+        - birthPlace
+        - grade
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: 生徒の名前
+          example: 山田太郎
+        grade:
+          type: string
+          description: 生徒の学年
+          example: 一年生
+        birthPlace:
+          type: string
+          description: 生徒の出身地
+          example: 東京都
+      description: 生徒情報更新リクエスト
+    Student:
+      required:
+        - birthPlace
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 学生ID
+          format: int32
+        name:
+          type: string
+          description: 学生の名前
+        grade:
+          type: string
+          description: 学年
+        birthPlace:
+          type: string
+          description: 出身地
+      description: 学生情報
